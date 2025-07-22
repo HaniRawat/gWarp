@@ -10,7 +10,6 @@ interface LightRayProps {
 }
 
 const LightRay: React.FC<LightRayProps> = ({ xPosition }) => {
-  // Create the points for the line along the local Y-axis
   const points = useMemo(() => {
     const linePoints = []
     for (let i = -20; i <= 20; i += 0.2) {
@@ -19,11 +18,12 @@ const LightRay: React.FC<LightRayProps> = ({ xPosition }) => {
     return linePoints
   }, [xPosition])
 
-  // Create the geometry and attach the original X position to it
   const lineGeometry = useMemo(() => {
     const geom = new THREE.BufferGeometry().setFromPoints(points);
-    // Store the original X position for the bending calculation later
-    (geom as any).originalX = xPosition;
+    
+    // ✅ FIX: Use the 'userData' object to store custom properties.
+    geom.userData.originalX = xPosition;
+    
     return geom;
   }, [points, xPosition]);
 

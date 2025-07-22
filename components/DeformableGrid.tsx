@@ -26,7 +26,7 @@ const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData }) => {
     const bendingFactor = 2.0;
     const effectiveBendingMass = massValue * bendingFactor;
 
-    // Deform the grid (This logic remains the same)
+    // Deform the grid
     const positions = geometry.attributes.position as THREE.BufferAttribute;
     const original = originalPositions.array as Float32Array;
     const current = positions.array as Float32Array;
@@ -46,33 +46,29 @@ const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData }) => {
     positions.needsUpdate = true;
     geometry.computeVertexNormals();
 
-    // Find and deform the light rays
-    scene.traverse((object) => {
+    // ✅ FIX 1: Add a specific type to the 'object' parameter.
+    scene.traverse((object: THREE.Object3D) => {
       if (object.type === 'Line') {
         const line = object as THREE.Line;
         const linePositions = line.geometry.attributes.position as THREE.BufferAttribute;
-        const lineOriginalX = (line.geometry as any).originalX;
+        
+        // ✅ FIX 2: Read from 'userData' instead of using 'any'.
+        const lineOriginalX = line.geometry.userData.originalX;
+
+        // Ensure we don't try to bend a line that doesn't have our custom data
+        if (lineOriginalX === undefined) return;
 
         for (let i = 0; i < linePositions.count; i++) {
           const x = lineOriginalX;
           const y = linePositions.getY(i);
           const distance = Math.sqrt(x * x + y * y);
           
-          // ✅ --- START OF CHANGE ---
+          // ✅ FIX 3: Use the 'distance' variable to make the bending effect correct.
+          const displacement = effectiveBendingMass * 0.5 * Math.exp(-0.2 * distance * distance);
           
-          // 1. Calculate the magnitude of the displacement.
-          const displacement = effectiveBendingMass * 0.5 * Math.exp(-0.2 * y * y);
-
-          // 2. Determine the direction to push the ray (left or right).
           const direction = Math.sign(x);
-
-          // 3. Apply the displacement to the X-axis to bend the ray sideways.
           linePositions.setX(i, x + (direction * displacement));
-
-          // 4. Ensure the ray stays flat by setting its Z-position to 0.
           linePositions.setZ(i, 0);
-
-          // ✅ --- END OF CHANGE ---
         }
         linePositions.needsUpdate = true;
       }
