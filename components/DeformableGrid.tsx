@@ -15,42 +15,72 @@ interface DeformableGridProps {
 }
 
 const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData }) => {
-  // ✅ Create the geometry and a copy of its original positions ONCE.
   const { geometry, originalPositions } = useMemo(() => {
     const geom = new THREE.PlaneGeometry(20, 20, 100, 100);
     const origPos = geom.attributes.position.clone();
     return { geometry: geom, originalPositions: origPos };
   }, []);
 
-  useFrame(() => {
+  useFrame(({ scene }) => {
+    const massValue = planetData.mass.get();
+    const bendingFactor = 2.0;
+    const effectiveBendingMass = massValue * bendingFactor;
+
+    // Deform the grid (This logic remains the same)
     const positions = geometry.attributes.position as THREE.BufferAttribute;
     const original = originalPositions.array as Float32Array;
     const current = positions.array as Float32Array;
-    
-    const massValue = planetData.mass.get();
-
     if (massValue > 0.01) {
       for (let i = 0; i < current.length; i += 3) {
         const x = original[i];
         const y = original[i + 1];
         const distance = Math.sqrt(x * x + y * y);
-        const deformation = -massValue * Math.exp(-0.2 * distance * distance);
+        const deformation = -effectiveBendingMass * Math.exp(-0.4 * distance * distance);
         current[i + 2] = original[i + 2] + deformation;
       }
     } else {
-      // Efficiently reset the grid if it's not already flat
-      if (current[2] !== original[2]) { 
+      if (current[2] !== original[2]) {
         current.set(original);
       }
     }
-
     positions.needsUpdate = true;
-    geometry.computeVertexNormals(); // Good practice for correct lighting
+    geometry.computeVertexNormals();
+
+    // Find and deform the light rays
+    scene.traverse((object) => {
+      if (object.type === 'Line') {
+        const line = object as THREE.Line;
+        const linePositions = line.geometry.attributes.position as THREE.BufferAttribute;
+        const lineOriginalX = (line.geometry as any).originalX;
+
+        for (let i = 0; i < linePositions.count; i++) {
+          const x = lineOriginalX;
+          const y = linePositions.getY(i);
+          const distance = Math.sqrt(x * x + y * y);
+          
+          // ✅ --- START OF CHANGE ---
+          
+          // 1. Calculate the magnitude of the displacement.
+          const displacement = effectiveBendingMass * 0.5 * Math.exp(-0.2 * y * y);
+
+          // 2. Determine the direction to push the ray (left or right).
+          const direction = Math.sign(x);
+
+          // 3. Apply the displacement to the X-axis to bend the ray sideways.
+          linePositions.setX(i, x + (direction * displacement));
+
+          // 4. Ensure the ray stays flat by setting its Z-position to 0.
+          linePositions.setZ(i, 0);
+
+          // ✅ --- END OF CHANGE ---
+        }
+        linePositions.needsUpdate = true;
+      }
+    });
   });
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]}>
-      {/* ✅ Attach the single, memoized geometry instance to the mesh */}
       <primitive object={geometry} attach="geometry" />
       <meshStandardMaterial color="#3333ff" wireframe={true} />
     </mesh>

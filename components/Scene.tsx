@@ -6,6 +6,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { useSpring, a } from "@react-spring/three";
 import DeformableGrid from "@/components/DeformableGrid";
+import LightRay from "@/components/LightRay"; // Import the new component
 
 interface ActivePlanet {
   mass: number;
@@ -13,9 +14,10 @@ interface ActivePlanet {
 
 interface SceneProps {
   activePlanet: ActivePlanet | null;
+  showRays: boolean; // Add the new prop
 }
 
-export default function Scene({ activePlanet }: SceneProps) {
+export default function Scene({ activePlanet, showRays }: SceneProps) {
   const [{ yPos, effectiveMass, scale }, api] = useSpring(() => ({
     yPos: 15,
     effectiveMass: 0,
@@ -28,7 +30,6 @@ export default function Scene({ activePlanet }: SceneProps) {
       const targetMass = activePlanet.mass;
       const targetScale = 0.5 + targetMass * 0.05;
       const finalYPos = -targetMass + targetScale;
-
       api.start({
         yPos: finalYPos,
         scale: targetScale,
@@ -54,7 +55,18 @@ export default function Scene({ activePlanet }: SceneProps) {
 
       <DeformableGrid planetData={{ mass: effectiveMass }} />
 
-      {/* ✅ Change this condition for better stability */}
+      {/* Conditionally render the light rays in a rotated group */}
+      {showRays && (
+        <group rotation={[-Math.PI / 2, 0, 0]}>
+          <LightRay xPosition={-3} />
+          <LightRay xPosition={-2.25} />
+          <LightRay xPosition={-1.5} />
+          <LightRay xPosition={1.5} />
+          <LightRay xPosition={2.25} />
+          <LightRay xPosition={3} />
+        </group>
+      )}
+
       {activePlanet && (
         <a.mesh position-y={yPos} scale={scale}>
           <sphereGeometry args={[1, 32, 32]} />
