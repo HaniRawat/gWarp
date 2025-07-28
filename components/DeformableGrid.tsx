@@ -19,7 +19,7 @@ const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData, segments  }
     const geom = new THREE.PlaneGeometry(20, 20, segments, segments);
     const origPos = geom.attributes.position.clone();
     return { geometry: geom, originalPositions: origPos };
-  }, []);
+  }, [segments]);
 
   useFrame(({ scene }) => {
     const massValue = planetData.mass.get();
