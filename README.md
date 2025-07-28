@@ -33,8 +33,8 @@ To run this project locally, follow these simple steps.
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
+    git clone [https://github.com/HaniRawat/gWarp.git](https://github.com/HaniRawat/gWarp.git)
+    cd gWarp
     ```
 
 2.  **Install dependencies:**
