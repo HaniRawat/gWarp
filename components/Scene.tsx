@@ -6,6 +6,7 @@ import { OrbitControls, Stars } from "@react-three/drei";
 import { useSpring, a } from "@react-spring/three";
 import DeformableGrid from "@/components/DeformableGrid";
 import LightRay from "@/components/LightRay";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface ActivePlanet {
   mass: number;
@@ -17,6 +18,14 @@ interface SceneProps {
 }
 
 export default function Scene({ activePlanet, showRays }: SceneProps) {
+  const isMobile = useIsMobile(); 
+
+  const qualitySettings = {
+    gridSegments: isMobile ? 40 : 100, // Fewer segments on mobile
+    starCount: isMobile ? 2000 : 10000, // Fewer stars on mobile
+    sphereSegments: isMobile ? 16 : 32, // Lower detail for the planet
+  };
+
   const { yPos, effectiveMass, scale } = useSpring({
     yPos: activePlanet ? -activePlanet.mass + (0.5 + activePlanet.mass * 0.05) : 15,
     scale: activePlanet ? 0.5 + activePlanet.mass * 0.05 : 0,
@@ -29,9 +38,12 @@ export default function Scene({ activePlanet, showRays }: SceneProps) {
       <color attach="background" args={["#000011"]} />
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 15, 10]} intensity={1.5} />
-      <Stars radius={300} depth={80} count={10000} factor={7} saturation={0} />
+      <Stars radius={300} depth={80} count={qualitySettings.starCount} factor={7} saturation={0} />
 
-      <DeformableGrid planetData={{ mass: effectiveMass }} />
+      <DeformableGrid
+        planetData={{ mass: effectiveMass }}
+        segments={qualitySettings.gridSegments}
+      />
 
       {showRays && (
         <group rotation={[-Math.PI / 2, 0, 0]}>
@@ -47,7 +59,7 @@ export default function Scene({ activePlanet, showRays }: SceneProps) {
       {/* ✅ FIX: Change the condition here to use 'activePlanet' state */}
       {activePlanet && (
         <a.mesh position-y={yPos} scale={scale}>
-          <sphereGeometry args={[1, 32, 32]} />
+          <sphereGeometry args={[1, qualitySettings.sphereSegments, qualitySettings.sphereSegments]} />
           <meshStandardMaterial
             color="#ff8800"
             emissive="#ff8800"

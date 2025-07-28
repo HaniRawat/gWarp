@@ -11,11 +11,12 @@ interface ActivePlanet {
 
 interface DeformableGridProps {
   planetData: ActivePlanet;
+  segments: number; // Add prop for grid detail
 }
 
-const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData }) => {
+const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData, segments  }) => {
   const { geometry, originalPositions } = useMemo(() => {
-    const geom = new THREE.PlaneGeometry(20, 20, 100, 100);
+    const geom = new THREE.PlaneGeometry(20, 20, segments, segments);
     const origPos = geom.attributes.position.clone();
     return { geometry: geom, originalPositions: origPos };
   }, []);
