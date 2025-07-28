@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 Interactive Spacetime Simulator
 
-## Getting Started
+A fun, interactive 3D visualization of Einstein's theory of General Relativity, built with Next.js and React Three Fiber. This project demonstrates how massive objects curve the fabric of spacetime and how that curvature affects the path of light—a phenomenon known as gravitational lensing.
 
-First, run the development server:
+![Spacetime Simulator Demo](./public/demo.jpg)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### ✨ Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* **Real-time Interaction**: Adjust the planet's mass using a slider and see the effects instantly.
+* **Spacetime Curvature**: The 3D grid deforms dynamically to represent the gravity well created by the planet.
+* **Gravitational Lensing**: Toggleable light rays that bend realistically as they pass the massive object.
+* **Smooth Animations**: Built with `react-spring` for fluid, physics-based animations.
+* **Modern UI**: Sleek and simple control panel for interacting with the simulation.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### 🛠️ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* **Framework**: [Next.js](https://nextjs.org/) (v14+)
+* **Language**: [TypeScript](https://www.typescriptlang.org/)
+* **3D Rendering**: [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/) & [React Three Drei](https://github.com/pmndrs/drei)
+* **Animation**: [React Spring](https://www.react-spring.dev/)
+* **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+### 🚀 Getting Started
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To run this project locally, follow these simple steps.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+    cd your-repo-name
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
+
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+---
+
+### 🧠 What I Learned
+
+This project was a fantastic deep dive into the world of 3D graphics on the web. Key takeaways include:
+* Bridging the gap between a standard 2D React UI and a 3D `react-three-fiber` canvas.
+* Managing complex state that affects both the UI and the 3D objects.
+* Implementing physics-based animations with `react-spring` and debugging subtle timing and lifecycle issues.
+* Translating a complex physics concept like spacetime curvature into a tangible, interactive visual experience.
