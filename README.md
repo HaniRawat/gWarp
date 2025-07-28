@@ -2,7 +2,7 @@
 
 A fun, interactive 3D visualization of Einstein's theory of General Relativity, built with Next.js and React Three Fiber. This project demonstrates how massive objects curve the fabric of spacetime and how that curvature affects the path of light—a phenomenon known as gravitational lensing.
 
-![Spacetime Simulator Demo](./public/demo.jpg)
+![Spacetime Simulator Demo](./public/demo.png)
 
 
 ---
@@ -33,8 +33,8 @@ To run this project locally, follow these simple steps.
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
+    git clone [https://github.com/HaniRawat/gWarp.git](https://github.com/HaniRawat/gWarp.git)
+    cd gWarp
     ```
 
 2.  **Install dependencies:**
