@@ -1,4 +1,3 @@
-// components/AddPlanetUI.tsx
 import React from "react";
 
 interface ActivePlanet {
@@ -11,7 +10,6 @@ interface AddPlanetUIProps {
   onAddPlanet: () => void;
   onRemovePlanet: () => void;
   activePlanet: ActivePlanet | null;
-  // Add new props for the button
   showRays: boolean;
   onToggleRays: () => void;
 }
@@ -27,9 +25,7 @@ const AddPlanetUI: React.FC<AddPlanetUIProps> = ({
 }) => {
   return (
     <div
-      className="rounded-xl bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-lg
-                 border border-white/30 shadow-lg p-8 text-white w-80"
-    >
+      className="rounded-xl bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-lg border border-white/30 shadow-lg p-8 text-white w-80">
       <h2 className="mb-6 text-2xl font-semibold text-center">
         Cosmic Control
       </h2>
@@ -54,18 +50,24 @@ const AddPlanetUI: React.FC<AddPlanetUIProps> = ({
           className="w-full h-1.5 bg-gray-300 rounded-lg appearance-none cursor-pointer"
         />
       </div>
-      <div className="flex justify-between gap-4">
-        <button
-          onClick={onAddPlanet}
-          className="flex-1 rounded-md bg-indigo-500 py-2 px-4 text-sm font-semibold text-white
-                     transition-colors hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        >
-          {activePlanet ? "Update" : "Create Planet"}
-        </button>
+
+      {/* Button Container */}
+      <div className="flex justify-center gap-4">
+        {/* ✅ FIX: The "Create" button now disappears when a planet is active */}
+        {!activePlanet && (
+          <button
+            onClick={onAddPlanet}
+            className="w-full rounded-md bg-indigo-500 py-2 px-4 text-sm font-semibold text-white
+                       transition-colors hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+            Create Planet
+          </button>
+        )}
+        
         {activePlanet && (
           <button
             onClick={onRemovePlanet}
-            className="flex-1 rounded-md bg-red-400 py-2 px-4 text-sm font-semibold text-white
+            className="w-full rounded-md bg-red-400 py-2 px-4 text-sm font-semibold text-white
                        transition-colors hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400"
           >
             Remove
@@ -73,7 +75,6 @@ const AddPlanetUI: React.FC<AddPlanetUIProps> = ({
         )}
       </div>
 
-      {/* This block adds the new button, which is only visible when a planet exists */}
       {activePlanet && (
         <div className="mt-6 border-t border-white/20 pt-6">
           <button

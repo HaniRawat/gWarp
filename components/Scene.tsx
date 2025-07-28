@@ -1,12 +1,11 @@
-// components/Scene.tsx
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { useSpring, a } from "@react-spring/three";
 import DeformableGrid from "@/components/DeformableGrid";
-import LightRay from "@/components/LightRay"; // Import the new component
+import LightRay from "@/components/LightRay";
 
 interface ActivePlanet {
   mass: number;
@@ -14,37 +13,16 @@ interface ActivePlanet {
 
 interface SceneProps {
   activePlanet: ActivePlanet | null;
-  showRays: boolean; // Add the new prop
+  showRays: boolean;
 }
 
 export default function Scene({ activePlanet, showRays }: SceneProps) {
-  const [{ yPos, effectiveMass, scale }, api] = useSpring(() => ({
-    yPos: 15,
-    effectiveMass: 0,
-    scale: 0,
-    config: { mass: 2, tension: 200, friction: 25 },
-  }));
-
-  useEffect(() => {
-    if (activePlanet) {
-      const targetMass = activePlanet.mass;
-      const targetScale = 0.5 + targetMass * 0.05;
-      const finalYPos = -targetMass + targetScale;
-      api.start({
-        yPos: finalYPos,
-        scale: targetScale,
-        effectiveMass: targetMass,
-        config: { tension: 180, friction: 12 },
-      });
-    } else {
-      api.start({
-        effectiveMass: 0,
-        yPos: 15,
-        scale: 0,
-        config: { tension: 250 },
-      });
-    }
-  }, [activePlanet, api]);
+  const { yPos, effectiveMass, scale } = useSpring({
+    yPos: activePlanet ? -activePlanet.mass + (0.5 + activePlanet.mass * 0.05) : 15,
+    scale: activePlanet ? 0.5 + activePlanet.mass * 0.05 : 0,
+    effectiveMass: activePlanet ? activePlanet.mass : 0,
+    config: { mass: 2, tension: 180, friction: 25 },
+  });
 
   return (
     <Canvas camera={{ position: [0, 10, 15], fov: 60 }}>
@@ -55,7 +33,6 @@ export default function Scene({ activePlanet, showRays }: SceneProps) {
 
       <DeformableGrid planetData={{ mass: effectiveMass }} />
 
-      {/* Conditionally render the light rays in a rotated group */}
       {showRays && (
         <group rotation={[-Math.PI / 2, 0, 0]}>
           <LightRay xPosition={-3} />
@@ -67,6 +44,7 @@ export default function Scene({ activePlanet, showRays }: SceneProps) {
         </group>
       )}
 
+      {/* ✅ FIX: Change the condition here to use 'activePlanet' state */}
       {activePlanet && (
         <a.mesh position-y={yPos} scale={scale}>
           <sphereGeometry args={[1, 32, 32]} />

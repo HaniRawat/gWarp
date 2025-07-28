@@ -1,4 +1,3 @@
-// components/DeformableGrid.tsx
 'use client'
 
 import React, { useMemo } from 'react';
@@ -46,16 +45,13 @@ const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData }) => {
     positions.needsUpdate = true;
     geometry.computeVertexNormals();
 
-    // ✅ FIX 1: Add a specific type to the 'object' parameter.
     scene.traverse((object: THREE.Object3D) => {
       if (object.type === 'Line') {
         const line = object as THREE.Line;
         const linePositions = line.geometry.attributes.position as THREE.BufferAttribute;
         
-        // ✅ FIX 2: Read from 'userData' instead of using 'any'.
         const lineOriginalX = line.geometry.userData.originalX;
 
-        // Ensure we don't try to bend a line that doesn't have our custom data
         if (lineOriginalX === undefined) return;
 
         for (let i = 0; i < linePositions.count; i++) {
@@ -63,7 +59,6 @@ const DeformableGrid: React.FC<DeformableGridProps> = ({ planetData }) => {
           const y = linePositions.getY(i);
           const distance = Math.sqrt(x * x + y * y);
           
-          // ✅ FIX 3: Use the 'distance' variable to make the bending effect correct.
           const displacement = effectiveBendingMass * 0.5 * Math.exp(-0.2 * distance * distance);
           
           const direction = Math.sign(x);

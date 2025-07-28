@@ -1,4 +1,3 @@
-// components/LightRay.tsx
 'use client'
 
 import React, { useMemo } from 'react'
@@ -21,7 +20,6 @@ const LightRay: React.FC<LightRayProps> = ({ xPosition }) => {
   const lineGeometry = useMemo(() => {
     const geom = new THREE.BufferGeometry().setFromPoints(points);
     
-    // ✅ FIX: Use the 'userData' object to store custom properties.
     geom.userData.originalX = xPosition;
     
     return geom;
